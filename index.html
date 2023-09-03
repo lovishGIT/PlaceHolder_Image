@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Get Link To Image</title>
+</head>
+
+<style>
+    .major {
+        border: 2px solid black;
+    }
+    #URl {
+        border: 2px solid black;
+    }
+    .cursor {
+        cursor: pointer;
+    }
+    .underL {
+        border-bottom: 2px solid black;
+    }
+    .space-down {
+        margin-bottom: 5%;
+    }
+    #UrlGenerated {
+        width: auto;
+        background-color: #F7F4F8;
+        border: 2px solid black;
+        padding-left: 1%;
+    }
+    #Go_To_Link {
+        background-color: rgb(83, 83, 161);
+        color: white;
+        border-radius: 20%;
+        padding: 2%;
+        cursor: pointer;
+    }
+</style>
+<body>
+
+        <div class="mx-[30%] my-[2%] px-[3%] text-center bg-[#F7F4F8] major">
+            <h1 class="text-3xl font-bold m-[3%] mb-[5%]">Place Holder Image Generator</h1>
+            <section class="text-xl text-left py-[2%]">
+                <label for="ImageSize">Image Size: </label>
+                <select name="ImageSize" id="" class="bg-[#f7f4f8] space-down cursor" required>
+                    <option value="150x150">Small (150x150)</option>
+                    <option value="200x200">Medium (200x200)</option>
+                    <option value="350x150">Medium (350x150)</option>
+                    <option value="400x400">Large (400x400)</option>
+                    <option value="650x350">Large (650x350)</option>
+                    <option value="800x600">X-Large (800x600)</option>
+                    <option value="1920x1080">Full (1920x1080)</option>
+                </select><br>
+
+                <label for="ImageText">Text On Image: </label>
+                <input type="text" name="ImageText" id="" class="bg-[#f7f4f8] p-[1%] underL space-down cursor"><br>
+
+                <label for="BGcolor">Background Colour: </label>
+                <input type="color" name="BGcolor" id="" class="space-down cursor" value="#FFFFFF"><br>
+
+                <label for="TextColor">Text Colour: </label>
+                <input type="color" name="TextColor" id="" class="space-down cursor" value="#808080"><br>
+                
+                <div id="DisplayImage" class="flex mb-[5%]">
+                    <p class="mr-[5%]">Preview :-</p>
+                    <img src="https://via.placeholder.com/150x150/FFFFFF/808080" alt="" class="cursor"/><br>
+                </div>
+
+                <div>
+                    <textarea id="UrlGenerated" cols="50" rows="3" placeholder="OutputURL" active>
+                        https://via.placeholder.com/150x150/FFFFFF/808080
+                    </textarea>
+                </div>
+                
+                <div class="my-[5%] text-center">
+                    <a id="Go_To_Link" href="https://via.placeholder.com/150x150/FFFFFF/808080">Visit Link</a>
+                </div>
+
+            </section>
+        </div>
+
+    <script>
+        const copyContent = async () => {
+            try {
+              await navigator.clipboard.writeText(ImageURL);
+            } catch (err) {
+                console.log("UNABLE TO COPY ON CLIPBOARD.");
+            }
+        }
+        copyContent();
+        // COPY TO CLIPBOARD
+
+        let image = document.querySelector("img");
+        let select = document.querySelector("select");
+        let input = document.querySelectorAll("input");
+
+        const remove_hash= (Element)=>{
+            return Element.replace("#","");
+        };
+        //REMOVED HASH FROM COLOURS TO ADD IN LINK
+        
+        let Go_to_url = ()=> {
+            document.querySelector("a").setAttribute('href', ImageURL) ;
+            console.log(document.querySelector("a").getAttribute('href'));
+        }
+        // UPDATED NEW LINK IN VISIT PAGE BUTTON
+        
+        let ImageSize ="150x150";
+        let ImageText;
+        let ImageBG_color="#FFFFFF";
+        let ImageTXT_color="#808080";
+        let ImageURL=`https://via.placeholder.com/150x150/FFFFFF/808080`;
+
+        const change_url = ()=> {
+            ImageURL = `https://via.placeholder.com/${ImageSize}/${remove_hash(ImageBG_color)}/${remove_hash(ImageTXT_color)}`;
+            if(ImageText != undefined && ImageText!="") {
+                ImageURL+= `?text=${ImageText}`;
+            }
+            document.querySelector("textarea").value = ImageURL;
+            DisplayImage(ImageURL);
+        }
+        // triggers when something is changed.
+
+        const DisplayImage = (ImageURL) =>{
+            image.src = ImageURL;
+            copyContent();
+            Go_to_url();
+        };
+        //triggered everytime after change_url to display new image
+
+
+        select.addEventListener("change",()=>{
+            ImageSize= select.value;
+            change_url();
+
+        });
+        
+        input.forEach( (current)=>{
+            current.addEventListener("change",()=>{
+                ImageText= input[0].value;
+                ImageBG_color= input[1].value;
+                ImageTXT_color= input[2].value;
+                change_url();
+            });
+        });
+
+    </script>
+
+</body>
+</html>
